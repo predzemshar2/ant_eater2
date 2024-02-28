@@ -2,6 +2,7 @@ import keyboard
 import time
 import os, random
 
+
 difficulty = input("Введи сложность (baby, normal, hard, insane):")
 
 Go = input('Введи "go" для запуска игры ("?" для подсказки):')
@@ -11,6 +12,15 @@ Game = True
 Ant_Eater, Ant_Hill, Ant, Grass, Stone = '☺','▲','8','░', '█'
 
 size = 10
+
+Go = input('Введи "go" для запуска игры:') #- Введен запуск игры через ключ "go"
+
+global Game
+Game = True
+Ant_Eater, Ant_Hill, Ant, Grass, Stone = '☺','▲','8','░', '█' #- изменена иконка муравья с "¤" на "8".
+
+size = 10 #- изменен базовый размер поля, для лучшего восприятия игроком.
+
 X = Y = size//2
 
 Field =[]
@@ -104,6 +114,7 @@ if Go == "go":
     keyboard.add_hotkey('down', move_down)
     keyboard.add_hotkey('esc', exit1)
 
+
     ants = []
 
     def spawn(hill):
@@ -186,8 +197,6 @@ if Go == "go":
                 last_t = t
 
 
-#===============================================================================================================
-#===============================================================================================================
 elif Go == "?":
     print("----------Игра «Ловкий муравьед».----------\n Главный герой – голодный, но очень ловкий муравьед"
           " бегает по двумерному полю от одного муравейника к другому\n и вылавливает убегающих за границу экрана муравьёв.\n"
@@ -204,18 +213,19 @@ elif Go == "?":
         )
     input()
 
-#===============================================================================================================    3
-#===============================================================================================================    3
-
 elif Go == "Revenge mode":
     Ant_Eater = "8"
     Ant = "☺"
+
+if Go == "go": #- Введен запуск игры через ключ "go"
+
     def draw():
         os.system('cls' if os.name == 'nt' else 'clear')
         for i in range(size):
             for j in range(size):
                 print(Field[i][j], end="")
             print()
+
         global eaten
         global gone
         ant_count = 0
@@ -227,6 +237,9 @@ elif Go == "Revenge mode":
             exit()
 
         print("Убито:", eaten,"|", " Убежало: ", gone,"|", "На поле: ", len(ants),"|", "Осталось: ", ant_count, "|")
+
+
+
     def exit1():
         global Game
         Game = False
@@ -245,6 +258,7 @@ elif Go == "Revenge mode":
         global Y
         X= current_x + delta_x
         Y= current_y + delta_y
+
         if Field[Y][X] == Ant:
             global eaten
             eaten += 1
@@ -252,14 +266,20 @@ elif Go == "Revenge mode":
                 ants.remove([X,Y])
             except:
                 pass
+
         Field[Y][X] = Ant_Eater
         #print("moving", X, Y)
     def move_left():
         if can_move(X,Y,-1,0):
             move_ant_eater(X,Y,-1, 0)
             draw()
+
     #    else:
     #        print("cannot_move",X,Y,-1,0)
+
+#       else:
+#           print("cannot_move",X,Y,-1,0)
+
     def move_right():
         if can_move(X,Y,1,0):
             move_ant_eater(X,Y,1, 0)
@@ -278,6 +298,7 @@ elif Go == "Revenge mode":
     keyboard.add_hotkey('up', move_up)
     keyboard.add_hotkey('down', move_down)
     keyboard.add_hotkey('esc', exit1)
+
 
     ants = []
 
@@ -369,3 +390,13 @@ try:
     keyboard.unhook_all_hotkeys()
 except:
     pass
+
+    while Game:
+        t= time.time()
+        if t-last_t>2:
+            draw()
+            print(t)
+            last_t = t
+
+keyboard.unhook_all_hotkeys()
+
